@@ -76,7 +76,7 @@
     return out;
   }
   function extractEvidence(raw) {
-    const excerpt = String(raw || '').slice(0, 120000);
+    const excerpt = String(raw || '').slice(0, 300000);
     if (!excerpt.trim()) return {};
     let source = excerpt;
     let structured = null;
@@ -118,6 +118,37 @@
     }
     return Object.fromEntries(FIELDS.filter(([key]) => data[key]).map(([key]) => [key, data[key]]));
   }
+
+  // Некоторые официальные страницы показывают сразу несколько товаров серии
+  // в alt-текстах изображений или заголовках вместо таблицы «Материал: ...».
+  // В таком случае нельзя автоматически выбирать первый объём.
+  function extractProductVariants(raw) {
+    const html = String(raw || '').slice(0, 300000);
+    if (!/<(?:html|body|img|figure|a)\b/i.test(html)) return [];
+    let doc;
+    try { doc = new DOMParser().parseFromString(html, 'text/html'); }
+    catch { return []; }
+    const nodes = [...doc.querySelectorAll('img[alt], a[title], a, figcaption, h3, h4, [data-title]')].slice(0, 1800);
+    const seen = new Set(), variants = [];
+    const productWord = /(?:\b(?:tumbler|shot|pitcher|glass|goblet|cup|vase|decanter|flute|whisky|highball|mixing)\b|стакан|рюмка|бокал|фужер|ваза|графин|кувшин|чашка)/i;
+    const volumePattern = /(\d{1,4}(?:[.,]\d+)?)\s*(ml|мл|l|л)(?![a-zа-яё])/i;
+    for (const node of nodes) {
+      for (const value of [node.getAttribute('alt'), node.getAttribute('title'), node.getAttribute('data-title'), node.textContent]) {
+        const label = trimmable(value);
+        if (label.length < 8 || label.length > 130 || !productWord.test(label)) continue;
+        const match = label.match(volumePattern);
+        if (!match) continue;
+        const unit = /^(?:l|л)$/i.test(match[2]) ? 'л' : 'мл';
+        const key = label.toLocaleLowerCase('ru').replace(/\s+/g, ' ');
+        if (seen.has(key)) continue;
+        seen.add(key);
+        variants.push({ label, dimensions: 'Объём: ' + match[1].replace(',', '.') + ' ' + unit });
+        if (variants.length >= 24) return variants;
+      }
+    }
+    return variants;
+  }
+
   const esc = s => String(s ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   function ui() {
     const shell = document.createElement('details');
@@ -150,8 +181,19 @@
     const target = root.querySelector('#helper-status');
     if (target) { target.textContent = message; target.classList.toggle('helper-error', error); }
   }
-  function buildProposals(root, data) {
+  function buildProposals(root, data, raw = '') {
     const panel = root.querySelector('#helper-results');
+    const variants = raw ? extractProductVariants(raw) : [];
+    if (variants.length) {
+      root._sourceVariants = { variants, base: data };
+      panel.innerHTML = '<h4>На странице найдены разные изделия. Выбери точную модель:</h4>' +
+        '<div class="helper-variant-list">' + variants.map((v, i) =>
+          '<button class="outline" type="button" data-source="variant" data-index="' + i + '">' + esc(v.label) + '</button>'
+        ).join('') + '</div>' +
+        '<p class="helper-note">Объём и название берутся из выбранной подписи на сайте. Набор из 6 шт., материал и заводской артикул нужно проверять отдельно.</p>';
+      setStatus(root, 'Найдено вариантов: ' + variants.length + '. Укажи именно свой стакан, прежде чем переносить характеристики.');
+      return;
+    }
     const entries = FIELDS.filter(([key]) => data[key]);
     if (!entries.length) {
       panel.innerHTML = '';
@@ -179,7 +221,7 @@
     }
     const input = root.querySelector('#helper-source-text');
     if (input) input.value = response.html;
-    buildProposals(root, extractEvidence(response.html));
+    buildProposals(root, extractEvidence(response.html), response.html);
     if (root.querySelectorAll('#helper-results input[data-field]').length) {
       setStatus(root, 'Сайт прочитан через Supabase. Проверь найденные значения и официальный источник перед переносом.');
     }
@@ -201,7 +243,7 @@
       const html = (await res.text()).slice(0, 120000);
       const input = root.querySelector('#helper-source-text');
       input.value = html;
-      buildProposals(root, extractEvidence(html));
+      buildProposals(root, extractEvidence(html), html);
     } catch (e) {
       try {
         await fetchThroughServer(root, link);
@@ -238,6 +280,14 @@
     }
     setStatus(root, `Перенесено ${moved} полей. Проверь и при необходимости отметь подтверждение характеристик, затем нажми «Сохранить» внизу карточки.`);
   }
+  function chooseVariant(root, index) {
+    const variants = root._sourceVariants;
+    if (!variants || !Number.isInteger(index) || index < 0 || index >= variants.variants.length) return;
+    const chosen = variants.variants[index];
+    const proposal = { ...variants.base, name: chosen.label, dimensions: chosen.dimensions };
+    buildProposals(root, proposal);
+    setStatus(root, 'Выбран вариант «' + chosen.label + '». Проверь совпадение формы и артикула, отметь нужные поля и перенеси их в карточку.');
+  }
   async function handleClick(event) {
     const button = event.target.closest('[data-source]');
     if (!button) return;
@@ -256,7 +306,11 @@
       if (!validSource(url)) { setStatus(root, 'Сначала укажи HTTPS-адрес производителя.', true); return; }
       window.open(url, '_blank', 'noopener,noreferrer');
     }
-    if (command === 'analyze') buildProposals(root, extractEvidence(root.querySelector('#helper-source-text').value));
+    if (command === 'variant') { chooseVariant(root, Number(button.dataset.index)); return; }
+    if (command === 'analyze') {
+      const html = root.querySelector('#helper-source-text').value;
+      buildProposals(root, extractEvidence(html), html);
+    }
     if (command === 'apply') applySelected(root);
   }
   const style = document.createElement('style');
@@ -274,6 +328,8 @@
     .helper-body textarea{width:100%;box-sizing:border-box;border:1px solid #d5dfee;border-radius:9px;padding:10px;font:12px/1.5 inherit;resize:vertical;background:#fff;color:#24314d}
     .helper-status{background:#eef3ff;border-radius:8px;padding:10px 12px!important;color:#394d93!important}
     .helper-status.helper-error{background:#fff5e9;color:#996529!important}
+    .helper-variant-list{display:flex;flex-direction:column;gap:7px;margin:12px 0}
+    .helper-variant-list button{text-align:left;overflow-wrap:anywhere;padding:10px 12px}
     .helper-results h4{font-size:12px;color:#263b63;margin:15px 0 9px}
     .helper-candidate{display:flex;gap:9px;align-items:flex-start;padding:9px 7px;border-bottom:1px solid #e4eaf5;color:#30405b;font-size:12px}
     .helper-candidate input,.helper-confirm input{accent-color:#465bca;flex-shrink:0;margin-top:2px}
