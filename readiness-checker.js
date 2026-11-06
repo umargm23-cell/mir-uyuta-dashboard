@@ -16,8 +16,8 @@ function evaluate(product={},photoRecords=[]){
    check(key,label,present(d[key]),weight,'Найди значение в официальном источнике.','Характеристики');
    check('verified_'+key,'Подтверждено: '+label,present(d[key])&&https(d.officialUrl)&&v[key]===true,verifyWeight,'Отметь подтверждение только после сверки.','Характеристики');
  }
- check('okpd2','Проверен код ОКПД2',/^\d{2}\.\d{2}\.\d{2}\.\d{3}$/.test(String(d.okpd2||'').trim()),6,'Укажи полный ОКПД2 00.00.00.000 после проверки классификатора.','Коды');
- check('tnved','Проверен 10-значный ТН ВЭД',/^\d{10}$/.test(String(d.tnved||'').trim()),6,'Укажи десять цифр после проверки материала, назначения и действующей ТН ВЭД.','Коды');
+ check('okpd2','ОКПД2: заполнен полный формат',/^\d{2}\.\d{2}\.\d{2}\.\d{3}$/.test(String(d.okpd2||'').trim()),6,'Укажи код в формате 00.00.00.000. Формат не подтверждает правильность кода.','Коды');
+ check('tnved','ТН ВЭД: указаны 10 цифр',/^\d{10}$/.test(String(d.tnved||'').trim()),6,'Укажи десять цифр. Корректность классификации проверяется отдельно по действующей ТН ВЭД.','Коды');
  if(sites.includes('wb')){
   check('wbCategory','Категория WB',present(d.wbCategory),5,'Нужна категория Wildberries.','Wildberries');
   check('wbCode','Код WB',present(d.wbCode),4,'Нужен код Wildberries.','Wildberries');
