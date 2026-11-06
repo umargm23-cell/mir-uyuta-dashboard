@@ -8,16 +8,16 @@
 
 ## Одноразовая настройка владельцем в Supabase
 
-1. В Supabase → **Edge Functions** создай и разверни функцию с именем `official-source` из `supabase/functions/official-source/index.ts`. Или используй CLI:
+1. Функция `official-source` уже развёрнута в проекте `mir-uyuta` через Supabase. Для последующих обновлений можно использовать CLI:
 
    ```bash
    supabase login
    supabase functions deploy official-source --project-ref npecgcxncwmgbqgqregh --use-api
    ```
 
-2. В Supabase → **Edge Functions → Secrets** добавь `OFFICIAL_SOURCE_HOSTS`: список **проверенных официальных доменов** производителей через запятую, например `nachtmann.com`. Добавляй новые домены после проверки, что ими управляет именно производитель. Не используй `*` или произвольные хосты.
+2. По умолчанию разрешены `nachtmann.com` и `rcrcrystal.com`. Для добавления других официальных производителей в Supabase → **Edge Functions → Secrets** задай `OFFICIAL_SOURCE_HOSTS` со списком **проверенных официальных доменов**, например `nachtmann.com,rcrcrystal.com`. Эта настройка переопределяет список по умолчанию: включи в неё все нужные сайты. Не используй `*`, произвольные хосты и адреса торговых площадок.
 
-3. **Verify JWT** оставь включённым. Функция принимает только JWT пользователя из текущей сессии; `supabase.functions.invoke` передаёт его автоматически. `supabase/config.toml` задаёт `verify_jwt = true`.
+3. **Verify JWT = OFF** в настройке Edge Function: это необходимо для новых publishable API keys. Авторизация **не отключена** — `@supabase/server` использует `withSupabase({ auth: 'user' })` и проверяет JWT пользователя внутри обработчика. `supabase/config.toml` задаёт `verify_jwt = false`. Не меняй `auth: 'user'` на `'none'`.
 
 4. В `mir-uyuta-dashboard/v2.html` открой карточку товара, вставь HTTPS-ссылку на сайт производителя, нажми **«Через сервер»**. Если функция ещё не развёрнута или домен не в списке, увидишь понятную ошибку и сможешь использовать ручное копирование характеристик.
 
