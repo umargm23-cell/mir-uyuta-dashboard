@@ -1,4 +1,4 @@
-/* Мир Уюта — помощник заполнения v2.3. Без внешних API, без секретных ключей. */
+/* Мир Уюта — помощник заполнения v2.4. Серверная функция доступна после развертывания в Supabase. */
 (() => {
   'use strict';
   const FIELDS = [
@@ -126,7 +126,7 @@
     shell.innerHTML = `<summary>🔎 Помощник заполнения по сайту производителя <span class="helper-new">НОВОЕ</span></summary>
       <div class="helper-body">
         <p>Введи выше ссылку на <strong>официальную страницу производителя</strong>. Попробуем прочитать её; если сайт блокирует доступ из браузера, открой страницу и вставь текст характеристик ниже.</p>
-        <div class="helper-buttons"><button type="button" class="outline" data-source="fetch">Получить по ссылке</button><button type="button" class="outline" data-source="open">Открыть источник ↗</button></div>
+        <div class="helper-buttons"><button type="button" class="outline" data-source="fetch">Получить по ссылке</button><button type="button" class="outline" data-source="server">Через сервер</button><button type="button" class="outline" data-source="open">Открыть источник ↗</button></div>
         <label class="helper-label" for="helper-source-text">Текст с официальной страницы (или HTML, если копируешь код)</label>
         <textarea id="helper-source-text" rows="5" placeholder="Артикул: ...\nМатериал: ...\nОбъём: ...\nСтрана производства: ..."></textarea>
         <div class="helper-buttons"><button type="button" class="outline" data-source="analyze">Найти характеристики</button></div>
@@ -167,6 +167,23 @@
       <button class="primary" type="button" data-source="apply">Перенести выбранное в карточку</button>`;
     setStatus(root, `Найдено ${entries.length} полей. Изменения появятся в форме, но сохранятся в облаке только после нажатия «Сохранить».`);
   }
+  async function fetchThroughServer(root, requestedUrl = '') {
+    const url = requestedUrl || root.closest('form')?.elements.namedItem('officialUrl')?.value?.trim() || '';
+    if (!validSource(url)) throw Error('Укажи корректный HTTPS-адрес производителя.');
+    const invoke = window.MirUyutaOfficialSourceInvoke;
+    if (typeof invoke !== 'function') throw Error('Приложение ещё не подключилось к Supabase. Обнови страницу.');
+    setStatus(root, 'Запрашиваю страницу через защищённую серверную функцию…');
+    const response = await invoke(url);
+    if (!response || typeof response.html !== 'string' || response.html.length > 350000 || !response.html.trim()) {
+      throw Error('Сервер не вернул читаемые характеристики.');
+    }
+    const input = root.querySelector('#helper-source-text');
+    if (input) input.value = response.html;
+    buildProposals(root, extractEvidence(response.html));
+    if (root.querySelectorAll('#helper-results input[data-field]').length) {
+      setStatus(root, 'Сайт прочитан через Supabase. Проверь найденные значения и официальный источник перед переносом.');
+    }
+  }
   async function fetchPage(root) {
     const link = root.closest('form').elements.namedItem('officialUrl')?.value?.trim() || '';
     if (!validSource(link)) { setStatus(root, 'Вставь корректную HTTPS-ссылку на официальный сайт производителя.', true); return; }
@@ -186,7 +203,13 @@
       input.value = html;
       buildProposals(root, extractEvidence(html));
     } catch (e) {
-      setStatus(root, 'Не получилось прочитать сайт автоматически (часто мешает CORS). Открой ссылку, скопируй раздел «Характеристики» и вставь его ниже. ' + (e.name === 'AbortError' ? 'Время ответа истекло.' : ''), true);
+      try {
+        await fetchThroughServer(root, link);
+      } catch (serverError) {
+        setStatus(root, 'Браузер не смог прочитать сайт. Сервер: ' +
+          String(serverError?.message || 'недоступен') +
+          '. Можно открыть официальный сайт и вставить характеристики вручную.', true);
+      }
     } finally { clearTimeout(timeout); }
   }
   function applySelected(root) {
@@ -221,6 +244,13 @@
     event.preventDefault();
     const root = event.currentTarget, command = button.dataset.source;
     if (command === 'fetch') { button.disabled = true; try { await fetchPage(root); } finally { button.disabled = false; } }
+    if (command === 'server') {
+      button.disabled = true;
+      try { await fetchThroughServer(root); }
+      catch (error) { setStatus(root, 'Серверное чтение не выполнено: ' + String(error?.message || error) + '. Используй ручную вставку текста.', true); }
+      finally { button.disabled = false; }
+      return;
+    }
     if (command === 'open') {
       const url = root.closest('form').elements.namedItem('officialUrl')?.value?.trim();
       if (!validSource(url)) { setStatus(root, 'Сначала укажи HTTPS-адрес производителя.', true); return; }
