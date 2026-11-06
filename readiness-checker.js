@@ -11,6 +11,7 @@ function evaluate(product={},photoRecords=[]){
  check('name','Название товара',present(d.name),6,'Укажи полное название и комплектность.');
  check('brand','Бренд',present(d.brand),3,'Укажи бренд.');
  check('article','Артикул',present(d.article),5,'Сверь артикул с документами производителя.');
+ check('verified_article','Артикул подтверждён по официальному источнику',present(d.article)&&v.article===true&&https(d.officialUrl),5,'Сверь заводской артикул и вручную отметь подтверждение.','Характеристики');
  check('officialUrl','Официальная HTTPS-ссылка',https(d.officialUrl),6,'Вставь страницу производителя и проверь, что домен официальный.');
  for(const [key,label,weight,verifyWeight] of [['material','Материал',6,5],['dimensions','Размер / объём',6,5],['country','Страна',4,3],['manufacturer','Производитель',4,3]]){
    check(key,label,present(d[key]),weight,'Найди значение в официальном источнике.','Характеристики');
@@ -18,10 +19,16 @@ function evaluate(product={},photoRecords=[]){
  }
  check('okpd2','ОКПД2: заполнен полный формат',/^\d{2}\.\d{2}\.\d{2}\.\d{3}$/.test(String(d.okpd2||'').trim()),6,'Укажи код в формате 00.00.00.000. Формат не подтверждает правильность кода.','Коды');
  check('tnved','ТН ВЭД: указаны 10 цифр',/^\d{10}$/.test(String(d.tnved||'').trim()),6,'Укажи десять цифр. Корректность классификации проверяется отдельно по действующей ТН ВЭД.','Коды');
+ if(sites.includes('ozon')){
+  check('ozonCategory','Категория Ozon',present(d.ozonCategory),4,'Выбери категорию из Seller API Ozon.','Ozon');
+  check('ozonCategoryId','ID категории Ozon',/^[1-9]\d*$/.test(String(d.ozonCategoryId||'')),4,'Укажи корректный ID категории Ozon.','Ozon');
+  check('ozonTypeId','ID типа товара Ozon',/^[1-9]\d*$/.test(String(d.ozonTypeId||'')),4,'Укажи тип товара из Seller API Ozon.','Ozon');
+ }
  if(sites.includes('wb')){
   check('wbCategory','Категория WB',present(d.wbCategory),5,'Нужна категория Wildberries.','Wildberries');
   check('wbCode','Код WB',present(d.wbCode),4,'Нужен код Wildberries.','Wildberries');
  }
+ if(d.saleType==='set')check('piecesInSet','Количество предметов в наборе',Number.isInteger(Number(d.piecesInSet))&&Number(d.piecesInSet)>=2,5,'Укажи число предметов продаваемого набора.','Продажа');
  check('quantity','Положительный остаток',Number.isInteger(Number(d.quantity))&&Number(d.quantity)>0,5,'Укажи фактический остаток.','Продажа');
  check('packaging','Описание упаковки',present(d.packaging),4,'Укажи тип упаковки.','Продажа');
  check('packagingChecked','Комплектность/упаковка проверены',d.packagingChecked===true,5,'Проверь продажу поштучно или набором и упаковку.','Продажа');
@@ -34,10 +41,12 @@ function evaluate(product={},photoRecords=[]){
  const names={photo:'Исправить фото',material:'Уточнить материал',dimension:'Уточнить размер',category:'Исправить категорию',stock:'Исправить остаток'};
  const problems=Array.isArray(d.issues)?[...new Set(d.issues.filter(k=>Object.prototype.hasOwnProperty.call(names,k)))]:[];
  check('issues','Нет открытых ошибок',problems.length===0,4,problems.length?'Отмечено: '+problems.map(k=>names[k]).join(', '):'Закрой замечания.','Контроль');
+ const smart=window.MirUyutaQuality?.evaluate(d)||[];
+ check('logical','Логические несоответствия отсутствуют',smart.length===0,5,smart.map(x=>x.title).join('; ')||'Проверь название, бренд, артикул и комплектность.','Контроль');
  const total=checks.reduce((s,c)=>s+c.weight,0)||1,score=Math.max(0,Math.min(100,Math.round(100*checks.reduce((s,c)=>s+c.weight*c.progress,0)/total)));
  const missing=checks.filter(c=>!c.done);
- const core=checks.filter(c=>c.group!=='Wildberries').every(c=>c.done);
- const channels={ozon:sites.includes('ozon')&&core,wb:sites.includes('wb')&&checks.every(c=>c.done)};
+ const core=checks.filter(c=>c.group!=='Wildberries'&&c.group!=='Ozon').every(c=>c.done);
+ const channels={ozon:sites.includes('ozon')&&core&&checks.filter(c=>c.group==='Ozon').every(c=>c.done),wb:sites.includes('wb')&&core&&checks.filter(c=>c.group==='Wildberries').every(c=>c.done)};
  return {score,complete:sites.length>0&&sites.every(k=>channels[k]),checks,missing,missingCount:missing.length,doneCount:checks.length-missing.length,count:checks.length,channels,sites,
   note:'Проверка полноты полей, а не экспертная оценка фото, подтверждение таможенного кода или проверка требований маркетплейсов по API.'};
 }
