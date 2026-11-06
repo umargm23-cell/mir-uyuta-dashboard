@@ -18,7 +18,7 @@ function reject(message: string, status: number): Response {
 }
 
 function allowedHosts(): string[] {
-  const raw = Deno.env.get('OFFICIAL_SOURCE_HOSTS') || 'nachtmann.com,rcrcrystal.com';
+  const raw = Deno.env.get('OFFICIAL_SOURCE_HOSTS') || 'nachtmann.com,rcrcrystal.com,crystal-bohemia.com';
   return raw.split(',').map(x => x.trim().toLowerCase().replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/$/, ''))
     .filter(x => x.includes('.') && !x.includes('/') && !x.includes(':') && x.length > 3 && !x.startsWith('.'));
 }
