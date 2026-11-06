@@ -2,3 +2,6 @@
 # New publishable API keys require verify_jwt=false in the gateway.
 [functions.official-source]
 verify_jwt = false
+# Validate JWT inside @supabase/server; gateway must allow publishable keys.
+[functions.marketplace-categories]
+verify_jwt = false
