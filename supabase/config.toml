@@ -1,3 +1,4 @@
-# Only authenticated Supabase users can invoke this function.
+# @supabase/server with auth: 'user' authenticates requests in function code.
+# New publishable API keys require verify_jwt=false in the gateway.
 [functions.official-source]
-verify_jwt = true
+verify_jwt = false
