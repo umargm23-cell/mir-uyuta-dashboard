@@ -7,6 +7,7 @@ const FAR='https://www.consultant.ru/document/cons_doc_LAW_397176/b9d5ab91ea9454
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const text=x=>String(x||'').toLowerCase().replace(/ё/g,'е');
 function classify(p,opt={}){
+ const extended=window.MirUyutaExpandedClassifier?.(p,opt);if(extended)return extended;
  const name=text(p.name),mat=text(p.material), t={okpd:'',tnved:'',group:'',warnings:[],source:'',reason:''};
  const drink=/стакан|рюмк|бокал|фужер|стопк|tumbler|highball|goblet|flute|wine glass|shot glass|beer glass/.test(name);
  const decorative=/ваз[а-я]*\s+для\s+цветов|flower vase|цветочн[а-я]*\s+ваз/.test(name);
@@ -64,7 +65,14 @@ function make(){
  ['made','Изготовление',['unknown','Неизвестно'],['hand','Ручное'],['machine','Механическое']],
  ['decor','Резной / другой декор?',['unknown','Неизвестно'],['yes','Есть'],['no','Нет']],
  ['tempered','Стекло упрочнённое?',['unknown','Неизвестно'],['yes','Да'],['no','Нет']],
- ['low','Низкое тепловое расширение (7013 42)?',['unknown','Неизвестно'],['yes','Да, по документам'],['no','Нет, по документам']]
+ ['low','Низкое тепловое расширение (7013 42)?',['unknown','Неизвестно'],['yes','Да, по документам'],['no','Нет, по документам']],
+ ['purpose','Назначение товара',['auto','Автоматически по названию'],['table','Столовая / кухонная посуда'],['household','Хозяйственная принадлежность'],['cutlery','Столовые приборы'],['decor','Только декоративное изделие']],
+ ['ceramicType','Тип керамики',['unknown','Неизвестно'],['coarse','Грубая'],['stoneware','Каменная'],['faience','Фаянс / тонкая'],['other','Прочая, по документам']],
+ ['plating','Приборы: драгоценное покрытие',['unknown','Неизвестно'],['no','Нет'],['yes','Да']],
+ ['cutlerySet','Столовые приборы: комплектность',['unknown','Неизвестно'],['no','Один предмет'],['yes','Набор']],
+ ['heating','Нагреватель / топливный блок',['unknown','Неизвестно'],['no','Нет'],['yes','Есть']],
+ ['aluminumType','Алюминий: способ изготовления',['unknown','Неизвестно'],['cast','Литой'],['foil','Фольга ≤ 0,2 мм'],['other','Прочее, подтверждено']],
+ ['woodType','Древесина',['unknown','Неизвестно'],['tropical','Тропическая'],['other','Прочая, не тропическая']]
  ].map(([key,title,...opts])=>'<label>'+title+'<select data-c-opt="'+key+'">'+opts.map(([v,t])=>'<option value="'+v+'">'+t+'</option>').join('')+'</select></label>').join('')+'</div>'+
  '<button type="button" class="outline" data-c-action="calculate">Подобрать по карточке</button><div class="class-result" aria-live="polite"></div>'+
  '<p>Справочный подбор, а не решение таможенного органа. Проверяй действующую номенклатуру, документы производителя и назначение изделия перед публикацией.</p></div>';
@@ -72,8 +80,30 @@ function make(){
  el.addEventListener('change',e=>{if(e.target.matches('[data-c-opt]'))render(el)});
  return el;
 }
+function filterControls(el){
+ const form=el.closest('form');if(!form)return;
+ const m=text(form.elements.namedItem('material')?.value||'');
+ const n=text(form.elements.namedItem('name')?.value||'');
+ const glass=/стекл|хруст|crystal|glass/.test(m)&&!/акрил/.test(m);
+ const ceramic=/керамик|фаянс|фарфор|porcelain|stoneware/.test(m);
+ const cut=/лож|вилк|половник|шумовк|щипц|spoon|fork|ladle/.test(n);
+ const metal=/нержав|сталь|медн|медь|меди|алюмин|stainless|alumin|copper/.test(m);
+ const aluminum=/алюмин|alumin/.test(m);
+ const wood=/дерев|древес|бамбук|wood|bamboo/.test(m);
+ const groups={
+  lead:glass,stem:glass,made:glass,decor:glass,tempered:glass,low:glass,
+  purpose:true,ceramicType:ceramic,plating:cut,cutlerySet:cut,
+  heating:metal,aluminumType:aluminum,woodType:wood
+ };
+ for(const sel of el.querySelectorAll('[data-c-opt]')){
+  const key=sel.dataset.cOpt;
+  const label=sel.closest('label');
+  if(label)label.hidden=groups[key]===false;
+ }
+}
 function render(el){
  const form=el.closest('form');if(!form)return;
+ filterControls(el);
  const p=fields(form),r=classify(p,options(el)),target=el.querySelector('.class-result');
  function line(key,title,code,old){
   if(!code)return '<p class="class-empty">'+title+': полный код пока не установлен</p>';
@@ -83,7 +113,7 @@ function render(el){
  (r.group&&!r.tnved?'<p class="class-family">Предварительная группа ТН ВЭД: <strong>'+esc(r.group)+'</strong> — в карточку не записывается.</p>':'')+
  (r.reason?'<p><b>Основание:</b> '+esc(r.reason)+'</p>':'')+
  r.warnings.map(x=>'<p class="class-warning">'+esc(x)+'</p>').join('')+
- '<p>Документы: <a href="'+OK+'" target="_blank" rel="noopener noreferrer">ОКПД2</a> · <a href="'+esc(r.source||TN)+'" target="_blank" rel="noopener noreferrer">ТН ВЭД ЕАЭС</a></p>'+
+ '<p>Документы: <a href="'+esc(r.okSource||OK)+'" target="_blank" rel="noopener noreferrer">ОКПД2</a> · <a href="'+esc(r.source||TN)+'" target="_blank" rel="noopener noreferrer">ТН ВЭД ЕАЭС</a></p>'+
  (r.okpd||r.tnved?'<label class="class-row"><input type="checkbox" data-c-confirm><span>Проверил назначение и материал по официальным документам; согласен перенести отмеченные коды.</span></label><button type="button" class="primary" data-c-action="apply">Перенести отмеченные коды</button>':'')+
  '<p class="class-status" role="status"></p>';
 }
@@ -105,7 +135,7 @@ function click(event){
 function attach(){
  const input=document.querySelector('#product-form #f-tnved');
  if(!input||document.querySelector('#code-classifier'))return;
- const host=input.closest('.field');if(host)host.insertAdjacentElement('afterend',make());
+ const host=input.closest('.field');if(host){const panel=make();host.insertAdjacentElement('afterend',panel);filterControls(panel);panel.closest('form')?.addEventListener('input',e=>{if(e.target.name==='material'||e.target.name==='name')filterControls(panel)});}
 }
 const css=document.createElement('style');css.textContent=
 '.code-classifier{grid-column:1/-1;min-width:0;border:1px solid #d5def0;border-radius:12px;background:#f8faff;margin:6px 0}'+
@@ -115,6 +145,7 @@ const css=document.createElement('style');css.textContent=
 '.code-classifier .class-body p{font-size:11px;line-height:1.6;color:#65748d;overflow-wrap:anywhere}'+
 '.code-classifier .class-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}'+
 '.code-classifier .class-options label{display:grid;gap:5px;font-size:11px;font-weight:700;min-width:0}'+
+'.code-classifier .class-options label[hidden]{display:none!important}'+
 '.code-classifier .class-options select{width:100%;min-width:0;border:1px solid #d6dff1;border-radius:8px;padding:9px;background:#fff}'+
 '.code-classifier .class-result{min-width:0;overflow-wrap:anywhere}'+
 '.code-classifier .class-result h4{font-size:12px;margin:14px 0 7px}'+
