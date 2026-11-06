@@ -331,11 +331,15 @@
     .helper-variant-list{display:flex;flex-direction:column;gap:7px;margin:12px 0}
     .helper-variant-list button{text-align:left;overflow-wrap:anywhere;padding:10px 12px}
     .helper-results h4{font-size:12px;color:#263b63;margin:15px 0 9px}
-    .helper-candidate{display:flex;gap:9px;align-items:flex-start;padding:9px 7px;border-bottom:1px solid #e4eaf5;color:#30405b;font-size:12px}
-    .helper-candidate input,.helper-confirm input{accent-color:#465bca;flex-shrink:0;margin-top:2px}
-    .helper-candidate small{display:block;font-size:11px;line-height:1.5;margin-top:3px;overflow-wrap:anywhere}
-    .helper-candidate em{display:block;color:#b46f31;font-size:10px;font-style:normal}
-    .helper-confirm{display:flex;gap:8px;align-items:flex-start;font-size:11px;line-height:1.5;margin:14px 0}
+    /* Область помощника находится внутри .field: общие стили .field input
+       иначе задают чекбоксам width:100% и отталкивают подписи за край экрана. */
+    .source-helper .helper-results{width:100%;min-width:0;max-width:100%;overflow-wrap:anywhere}
+    .source-helper .helper-candidate{display:grid;grid-template-columns:20px minmax(0,1fr);align-items:start;column-gap:10px;padding:12px 5px;border-bottom:1px solid #e4eaf5;color:#30405b;font-size:12px;width:100%;min-width:0;max-width:100%}
+    .source-helper .helper-candidate>span{display:block;min-width:0;overflow-wrap:anywhere}
+    .source-helper .helper-candidate input[type="checkbox"],.source-helper .helper-confirm input[type="checkbox"]{display:block;box-sizing:border-box;appearance:auto;width:18px!important;min-width:18px!important;max-width:18px!important;height:18px!important;min-height:18px;padding:0!important;margin:2px 0 0!important;flex:0 0 18px;accent-color:#465bca;border:initial;border-radius:0}
+    .source-helper .helper-candidate small{display:block;font-size:11px;line-height:1.5;margin-top:3px;overflow-wrap:anywhere}
+    .source-helper .helper-candidate em{display:block;color:#b46f31;font-size:10px;font-style:normal;overflow-wrap:anywhere}
+    .source-helper .helper-confirm{display:grid;grid-template-columns:20px minmax(0,1fr);column-gap:10px;align-items:start;font-size:11px;line-height:1.5;margin:14px 0;min-width:0;overflow-wrap:anywhere}
     .helper-results>.primary{font-size:11px;padding:11px 13px}
     .helper-note{margin-top:14px!important;font-size:10px!important}
     @media(max-width:500px){.source-helper summary{font-size:11px;padding:13px 11px}.helper-body{padding:13px 10px}.helper-buttons button{flex:1}}
