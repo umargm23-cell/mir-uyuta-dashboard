@@ -1,0 +1,3 @@
+# Only authenticated Supabase users can invoke this function.
+[functions.official-source]
+verify_jwt = true
