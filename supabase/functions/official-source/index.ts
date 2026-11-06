@@ -18,7 +18,7 @@ function reject(message: string, status: number): Response {
 }
 
 function allowedHosts(): string[] {
-  const raw = Deno.env.get('OFFICIAL_SOURCE_HOSTS') || '';
+  const raw = Deno.env.get('OFFICIAL_SOURCE_HOSTS') || 'nachtmann.com,rcrcrystal.com';
   return raw.split(',').map(x => x.trim().toLowerCase().replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/$/, ''))
     .filter(x => x.includes('.') && !x.includes('/') && !x.includes(':') && x.length > 3 && !x.startsWith('.'));
 }
@@ -34,7 +34,7 @@ function safePublicUrl(value: unknown, hosts: string[]): URL {
   if (/^(?:\d+\.\d+\.\d+\.\d+|\d+|localhost)$/.test(host) || /\.(?:localhost|local|internal|test|invalid|example)$/.test(host)) {
     throw Error('Локальные и IP-адреса запрещены.');
   }
-  if (!hosts.some(allowed => host === allowed || host === `www.${allowed}` || host.endsWith('.' + allowed))) {
+  if (!hosts.some(allowed => host === allowed || host === `www.${allowed}`)) {
     throw Error('Домен не включён в список официальных сайтов. Добавь его в OFFICIAL_SOURCE_HOSTS в Supabase.');
   }
   return url;
@@ -92,8 +92,7 @@ async function fetchOfficial(initial: URL, hosts: string[]): Promise<{ html: str
   } finally { clearTimeout(deadline); }
 }
 
-export default {
-  fetch: withSupabase({ auth: 'user' }, async (req, ctx) => {
+const authHandler = withSupabase({ auth: 'user' }, async (req, ctx) => {
     if (req.method !== 'POST') return reject('Используй POST.', 405);
     const hosts = allowedHosts();
     if (!hosts.length) return reject('Сервер ещё не настроен: в Supabase добавь OFFICIAL_SOURCE_HOSTS.', 503);
@@ -119,5 +118,19 @@ export default {
         error instanceof Error ? error.message : 'Не удалось получить страницу.';
       return reject(message, 422);
     }
-  })
+  });
+const corsHeaders = {
+  'Access-Control-Allow-Origin': 'https://umargm23-cell.github.io',
+  'Access-Control-Allow-Headers': 'authorization, apikey, content-type, x-client-info',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Vary': 'Origin'
+};
+export default {
+  async fetch(req: Request) {
+    if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+    const response = await authHandler(req);
+    const headers = new Headers(response.headers);
+    Object.entries(corsHeaders).forEach(([k, v]) => headers.set(k, v));
+    return new Response(response.body, { status: response.status, headers });
+  }
 };
