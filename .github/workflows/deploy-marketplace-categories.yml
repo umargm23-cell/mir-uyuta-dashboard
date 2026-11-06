@@ -1,0 +1,32 @@
+name: Deploy marketplace category lookup
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'supabase/functions/marketplace-categories/**'
+      - '.github/workflows/deploy-marketplace-categories.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: npecgcxncwmgbqgqregh
+    steps:
+      - name: Explain missing deployment authorization
+        if: ${{ env.SUPABASE_ACCESS_TOKEN == '' }}
+        run: echo 'Function is already deployed. Automatic redeploy requires SUPABASE_ACCESS_TOKEN in GitHub Actions secrets.'
+      - uses: actions/checkout@v4
+        if: ${{ env.SUPABASE_ACCESS_TOKEN != '' }}
+      - uses: supabase/setup-cli@v1
+        if: ${{ env.SUPABASE_ACCESS_TOKEN != '' }}
+        with:
+          version: latest
+      - name: Deploy authenticated categories function
+        if: ${{ env.SUPABASE_ACCESS_TOKEN != '' }}
+        run: supabase functions deploy marketplace-categories --project-ref "$SUPABASE_PROJECT_REF" --use-api --no-verify-jwt
