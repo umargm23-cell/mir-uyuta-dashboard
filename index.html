@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111b32">
+  <meta name="description" content="Мир Уюта — локальная панель подготовки карточек товаров для Ozon и Wildberries">
+  <title>Мир Уюта — рабочая панель</title>
+  <style>
+:root{color-scheme:light;--bg:#f6f7fb;--panel:#fff;--ink:#17213b;--muted:#788196;--line:#e8ebf2;--blue:#4357c8;--blue-dark:#3447b6;--blue-light:#eef0ff;--teal:#0e9c83;--orange:#d68b2b;--rose:#d05269;--shadow:0 7px 26px rgba(24,37,73,.035)}
+*{box-sizing:border-box}html{font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:14px}body{margin:0;background:var(--bg);color:var(--ink)}button,input,textarea,select{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.5}button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #a3b5ff;outline-offset:2px}a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}.app-shell{display:flex;min-height:100vh}.sidebar{width:250px;min-width:250px;background:#111b32;color:#e6ecfc;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;padding:29px 15px 19px;z-index:30}.brand{display:flex;align-items:center;gap:12px;padding:2px 9px 43px}.brand-mark{width:43px;height:43px;background:#465ce0;color:white;border-radius:13px;display:flex;align-items:center;justify-content:center;position:relative;font-size:25px;font-weight:800}.brand-dot{width:9px;height:9px;position:absolute;right:-2px;top:-2px;background:#65dec1;border-radius:50%;border:2px solid #111b32}.brand strong{display:block;font-size:18px;letter-spacing:-.4px}.brand small{display:block;color:#929fb7;margin-top:3px;font-size:11px}.nav-caption{color:#66758d;font-weight:700;font-size:10px;letter-spacing:1.5px;padding:0 14px;margin-bottom:16px}.nav{display:flex;flex-direction:column;gap:6px}.nav-button{display:flex;align-items:center;gap:12px;background:none;color:#aab5c9;padding:13px 13px;width:100%;text-align:left;border:0;border-radius:10px;font-weight:600}.nav-button:hover{background:#1c2944;color:white}.nav-button.active{background:#283757;color:#fff}.nav-icon{font-size:21px;font-weight:400;line-height:1;width:23px;text-align:center}.nav-count{margin-left:auto;border-radius:7px;background:#30405f;color:#b9c6e2;font-size:11px;min-width:22px;text-align:center;padding:3px 5px}.nav-count.hot{background:#55384c;color:#ffbbc6}.sidebar-bottom{margin-top:auto}.integration-card{border:1px solid #314058;border-radius:14px;background:#1a2841;padding:15px 12px}.integration-top{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:12px}.integration-icon{color:#8da0ff;font-size:20px}.marketline{display:flex;align-items:center;gap:9px;margin:9px 0;font-weight:600;font-size:12px}.market-icon{width:23px;height:23px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:white}.market-icon.ozon{background:#2165d9}.market-icon.wb{background:#ad3dcc}.market-note{margin-left:auto;color:#8794ae;font-size:10px;font-weight:400}.integration-card p{margin:15px 0 0;color:#7e8da8;font-size:10px;line-height:1.5}.sidebar-footer{padding:23px 8px 0;color:#64748f;font-size:11px}.workspace{flex:1;min-width:0}.topbar{height:74px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 35px;gap:12px}.top-breadcrumb{font-size:12px;color:#99a1ae;white-space:nowrap}.top-breadcrumb span{margin:0 11px;color:#b7bfcc}.top-breadcrumb strong{font-weight:600;color:#58627b}.top-actions{display:flex;align-items:center;gap:15px}.save-state{white-space:nowrap;font-size:11px;color:#8894a5}.save-dot{display:inline-block;height:7px;width:7px;background:#38bc98;border-radius:50%;margin-right:6px}.primary-button,.outline-button,.text-button,.link-button,.danger-button{border:0;display:inline-flex;gap:7px;align-items:center;justify-content:center;border-radius:9px;font-weight:700}.primary-button{background:var(--blue);color:#fff;padding:13px 17px;box-shadow:0 5px 14px rgba(67,87,200,.14)}.primary-button:hover{background:var(--blue-dark)}.outline-button{background:#fff;color:#58647b;border:1px solid #e1e6ee;padding:11px 15px}.outline-button:hover{border-color:#bdc7dc;background:#f9faff}.primary-button.small,.outline-button.small{padding:9px 13px;font-size:12px}.text-button{background:transparent;color:#485ac6;padding:9px 0;white-space:nowrap}.link-button{border:0;background:none;color:#6b7590;padding:3px}.link-button:hover{color:var(--blue)}.danger-button{background:#fff1f3;color:#c23f58;padding:11px 15px}.main-content{padding:37px 35px 25px;max-width:1680px;margin:auto}.page-heading{display:flex;justify-content:space-between;gap:14px;align-items:end;margin-bottom:27px}.eyebrow{color:#7b8ac1;font-size:10px;font-weight:800;letter-spacing:1.45px;margin-bottom:8px}h1{font-size:28px;line-height:1.2;margin:0;letter-spacing:-.8px}h2,h3{letter-spacing:-.35px}.page-subtitle{color:#8b95a9;font-size:12px;margin:8px 0 0}.heading-date{font-size:12px;color:#9da6b5;padding-bottom:4px;white-space:nowrap}.demo-banner{background:#fff9ea;border:1px solid #f4e7c8;border-radius:12px;padding:13px 17px;display:flex;align-items:center;gap:13px;margin-bottom:19px;color:#6c5d37}.demo-banner[hidden]{display:none}.demo-banner strong{font-size:12px}.demo-banner div div{font-size:11px;margin-top:3px;color:#987b45;line-height:1.45}.demo-symbol{font-size:24px;color:#dcac48}.demo-banner .text-button{margin-left:auto;color:#927536;font-size:11px}.metric-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:24px}.metric-card{border:1px solid var(--line);background:var(--panel);border-radius:15px;padding:19px 20px;box-shadow:var(--shadow);min-height:132px}.metric-top{display:flex;align-items:center;justify-content:space-between;color:#7f8a9c;font-size:11px;font-weight:600}.metric-icon{display:grid;place-items:center;width:35px;height:35px;border-radius:11px;font-size:17px;background:#edf0ff;color:#4357c8}.metric-icon.green{background:#e5f8f2;color:var(--teal)}.metric-icon.yellow{background:#fff4e4;color:var(--orange)}.metric-icon.red{background:#ffebef;color:var(--rose)}.metric-value{font-weight:800;letter-spacing:-1px;font-size:31px;margin-top:10px}.metric-note{font-size:11px;color:#a1a9b7;margin-top:3px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:23px}.toolbar select,.search-wrap{height:41px;background:#fff;border:1px solid #e3e7ef;border-radius:10px;color:#647087;outline:0}.toolbar select{padding:0 27px 0 12px;max-width:194px;min-width:122px;font-size:11px}.search-wrap{display:flex;align-items:center;gap:9px;flex:1 1 225px;padding:0 13px}.search-wrap input{border:0;outline:0;width:100%;font-size:12px;color:#24304e;min-width:70px}.search-wrap input::placeholder{color:#a8afbc}.search-symbol{font-size:24px;color:#9da9bb;line-height:0}.reset-btn{padding:0 13px;font-size:11px}.content-columns{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(285px,.75fr);gap:19px;margin-bottom:20px}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:22px}.panel-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:20px}.panel-heading h2{font-size:16px;margin:0}.panel-heading p{margin:5px 0 0;font-size:11px;color:#9aa3b1}.panel-link{font-size:11px;color:var(--blue);font-weight:700;border:0;background:none;padding:6px}.pipeline-list{display:flex;flex-direction:column;gap:16px}.pipeline-row{display:grid;grid-template-columns:170px 1fr 25px;gap:10px;align-items:center}.pipeline-label{font-size:11px;color:#626d83;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pipeline-track{height:8px;border-radius:8px;background:#f0f2f7;overflow:hidden}.pipeline-fill{display:block;height:100%;border-radius:8px;background:#5269dd;min-width:0}.pipeline-count{text-align:right;font-size:11px;color:#6c7890;font-weight:700}.attention-list{display:flex;flex-direction:column;gap:10px}.attention-item{border:1px solid #edf0f6;border-radius:10px;padding:12px;display:flex;align-items:flex-start;gap:10px;cursor:pointer;background:#fff;text-align:left;width:100%}.attention-item:hover{background:#fafbff;border-color:#dce2f5}.attention-icon{display:grid;place-items:center;border-radius:8px;background:#fff1eb;color:#d58d51;width:30px;height:30px;flex-shrink:0;font-weight:700}.attention-content{min-width:0;flex:1}.attention-content strong{font-size:12px;display:block;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}.attention-content span{font-size:10px;color:#9ba5b4;display:block;margin-top:5px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}.attention-arrow{color:#a8b3c7;font-size:18px}.data-panel{padding:0;overflow:hidden}.table-heading{padding:20px 22px 14px;margin:0}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;text-align:left;min-width:710px}thead{background:#fbfcff;color:#9ba3b2}th{font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.5px;padding:13px 18px;white-space:nowrap}td{padding:14px 18px;border-top:1px solid #eff1f6;font-size:12px;color:#5d6980}tbody tr:hover{background:#fdfdff}.product-name{color:#26314e;font-weight:750}.product-sub{color:#a5adba;font-size:10px;margin-top:4px;display:flex;gap:7px;align-items:center}.demo-pill{font-size:9px;color:#bd8933;background:#fff4dd;padding:2px 5px;border-radius:4px;font-weight:700}.platform-tags{display:flex;gap:4px}.platform-tag{font-weight:800;font-size:9px;padding:5px 7px;border-radius:6px}.platform-tag.ozon{background:#edf3ff;color:#2864d8}.platform-tag.wb{background:#f8eafa;color:#aa34bb}.chip{border-radius:999px;padding:5px 9px;font-size:10px;font-weight:700;display:inline-block;white-space:nowrap}.chip.ready{background:#e6f7f0;color:#0b9679}.chip.pending{background:#fff4e1;color:#af761f}.chip.bad{background:#fff0f0;color:#c4525d}.chip.published{background:#e7ecff;color:#4558bb}.progressbar{height:5px;width:76px;border-radius:4px;background:#ebedf4;overflow:hidden;margin-top:5px}.progressbar span{height:100%;display:block;background:#687bdd}.row-actions{display:flex;align-items:center;gap:5px}.mini-action{border:1px solid #e5e9f3;background:#fff;color:#647194;padding:6px 9px;border-radius:8px;font-size:11px;white-space:nowrap}.mini-action:hover{background:#f4f6ff;color:#4155c7}.empty-state{text-align:center;padding:50px 15px;color:#919eb0}.empty-icon{font-size:38px;background:#f3f5fc;border-radius:18px;width:72px;height:72px;margin:0 auto 14px;display:grid;place-items:center;color:#8f9bd9}.empty-state strong{display:block;color:#34405c;font-size:15px}.empty-state p{font-size:12px;margin:8px auto 19px;max-width:370px;line-height:1.6}.kanban-wrap{overflow-x:auto;padding-bottom:15px}.kanban{display:flex;align-items:flex-start;gap:14px;min-height:385px}.kanban-column{width:265px;min-width:265px;background:#edf0f7;border:1px solid #e4e9f3;border-radius:13px;padding:11px}.kanban-head{display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:800;padding:5px 4px 13px}.kanban-head span:last-child{background:white;color:#8090ac;font-size:11px;padding:4px 7px;border-radius:7px}.kanban-cards{display:flex;flex-direction:column;gap:9px}.kanban-card{background:white;border-radius:10px;padding:13px;box-shadow:0 2px 8px rgba(35,52,90,.04);border:1px solid #e8ebf5}.kanban-card h3{font-size:12px;margin:8px 0 6px;line-height:1.4}.kanban-card .light{color:#a2acbb;font-size:10px}.kanban-foot{display:flex;align-items:center;justify-content:space-between;margin-top:13px;gap:8px}.kanban-foot span{font-size:10px;color:#94a0b3}.kanban-buttons{display:flex;gap:4px}.column-empty{color:#a2acbb;font-size:11px;padding:24px 8px;text-align:center}.fixes-overview{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}.filter-chip{border:1px solid #e4e9f2;padding:9px 12px;border-radius:999px;background:#fff;color:#6f7b93;font-size:11px;font-weight:700}.filter-chip.active{background:#e9eeff;color:#4258c3;border-color:#cfd8fb}.fixes-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.fix-card{border:1px solid var(--line);background:white;border-radius:13px;padding:17px}.fix-card-head{display:flex;align-items:start;justify-content:space-between;gap:8px}.fix-card h3{font-size:13px;margin:0 0 5px}.fix-card p{color:#a2aabd;margin:0;font-size:11px}.issue-tags{display:flex;flex-wrap:wrap;gap:6px;margin:13px 0}.issue-tag{background:#fff1ed;color:#c87657;padding:5px 8px;font-size:10px;border-radius:7px;font-weight:700}.fix-card-bottom{border-top:1px solid #f0f2f6;padding-top:13px;display:flex;justify-content:space-between;align-items:center;gap:8px;color:#8e9aac;font-size:11px}.footer{display:flex;justify-content:space-between;gap:10px;align-items:center;font-size:10px;color:#a4adba;padding:26px 2px}.footer>div{display:flex;align-items:center;gap:9px}.foot-dot{font-size:18px;color:#c9ced8}.mobile-menu{display:none}.icon-button{background:none;border:0;color:#627087;padding:6px}.modal-backdrop{position:fixed;inset:0;background:rgba(16,25,46,.52);display:flex;align-items:stretch;justify-content:flex-end;z-index:100;animation:fade .15s ease}.modal{background:#fff;width:min(710px,100%);height:100vh;overflow-y:auto;box-shadow:-12px 0 40px rgba(11,17,40,.16);display:flex;flex-direction:column}.modal-header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding:25px 30px 19px;gap:15px;position:sticky;top:0;background:white;z-index:2}.modal-header h2{margin:0;font-size:21px}.modal-header p{margin:6px 0 0;font-size:11px;color:#9099ac}.close-button{background:#f4f6fa;border:0;border-radius:10px;width:34px;height:34px;font-size:23px;color:#77849b}.product-form{padding:24px 30px 15px;flex:1}.form-section{border:0;padding:0;margin:0 0 27px}.form-section legend{font-size:13px;font-weight:800;margin-bottom:15px;color:#2c3854;width:100%;border-bottom:1px solid #edf0f6;padding-bottom:11px}.form-section-note{font-size:11px;color:#98a1b1;line-height:1.6;margin:-5px 0 15px}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field{display:flex;flex-direction:column;gap:6px;min-width:0}.field.full{grid-column:1/-1}.field label{font-size:11px;font-weight:700;color:#67738a}.field input,.field select,.field textarea{border-radius:8px;border:1px solid #e1e6f0;padding:11px 12px;background:#fff;width:100%;font-size:12px;color:#28344e;outline:0}.field input:focus,.field select:focus,.field textarea:focus{border-color:#8b9ce8;box-shadow:0 0 0 3px #e9edff}.field input::placeholder,.field textarea::placeholder{color:#b4bcca}.field textarea{resize:vertical;min-height:66px;line-height:1.5}.input-hint{color:#a5acb9;font-size:10px;line-height:1.45}.choice-row{display:flex;gap:12px;flex-wrap:wrap}.choice-row label,.checks-grid label{display:flex;align-items:center;gap:9px;font-size:11px;color:#55617b}.choice-row input,.checks-grid input{accent-color:#465bca;width:15px;height:15px}.checks-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;padding:13px;background:#f8f9fc;border:1px solid #edf0f6;border-radius:10px}.checks-grid label{font-weight:600}.photo-slots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.photo-slot{display:flex;align-items:center;gap:8px}.photo-slot span{background:#eef1fd;border-radius:7px;color:#5d70c6;padding:9px;width:28px;height:32px;text-align:center;font-size:11px;font-weight:800}.photo-slot input{min-width:0}.section-counter{font-size:11px;color:#8d98aa;margin:8px 0 14px}.callout{padding:12px 14px;border-radius:10px;background:#fff7e9;color:#956f35;font-size:11px;line-height:1.6;margin-bottom:19px}.modal-footer{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--line);padding:16px 30px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 -5px 20px rgba(20,26,45,.03)}.modal-footer .right{display:flex;gap:10px}.toast{position:fixed;bottom:23px;right:23px;background:#18243e;color:white;padding:12px 17px;border-radius:10px;box-shadow:0 12px 28px #101b3240;font-size:12px;z-index:200;opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .2s,transform .2s}.toast.visible{opacity:1;transform:translateY(0)}.note-panel{display:flex;gap:10px;align-items:center;border:1px dashed #d6def4;background:#f9faff;color:#7080aa;padding:18px;border-radius:12px;font-size:12px}.muted{color:#a1adbe}.nowrap{white-space:nowrap}.record-count{color:#a5adbc;font-size:11px}.section-title{font-size:16px;margin:6px 0 15px}@keyframes fade{from{opacity:0}to{opacity:1}}
+@media(max-width:1280px){.sidebar{width:215px;min-width:215px}.topbar{padding:0 24px}.main-content{padding:30px 24px}.metric-card{padding:17px}.toolbar select{max-width:160px}.content-columns{grid-template-columns:minmax(0,1.1fr) minmax(265px,.9fr)}.pipeline-row{grid-template-columns:125px 1fr 22px}}
+@media(max-width:1020px){.metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.content-columns{grid-template-columns:1fr}.fixes-list{grid-template-columns:1fr 1fr}.save-state{display:none}.sidebar{width:200px;min-width:200px}}
+@media(max-width:750px){.sidebar{position:fixed;left:0;top:0;bottom:0;transform:translateX(-105%);transition:transform .2s;width:245px;min-width:245px;box-shadow:12px 0 20px #111b3220}.sidebar.open{transform:translateX(0)}.mobile-menu{display:block}.topbar{height:66px;padding:0 14px}.top-breadcrumb{display:none}.top-actions{margin-left:auto;gap:8px}.top-actions .outline-button{display:none}.main-content{padding:25px 14px 18px}.page-heading{align-items:flex-start}.heading-date{display:none}h1{font-size:24px}.metric-grid{gap:10px}.metric-card{padding:15px;min-height:117px}.metric-value{font-size:26px}.metric-top{font-size:10px}.metric-icon{width:28px;height:28px}.toolbar{gap:7px}.toolbar select{flex:1;min-width:130px;max-width:none}.toolbar .search-wrap{flex-basis:100%}.reset-btn{flex:1}.panel{padding:17px}.pipeline-row{grid-template-columns:118px 1fr 23px}.fixes-list{grid-template-columns:1fr}.modal-header{padding:20px 18px}.product-form{padding:20px 18px}.modal-footer{padding:14px 18px}.photo-slots{grid-template-columns:1fr}.demo-banner{align-items:flex-start;flex-wrap:wrap}.demo-banner .text-button{margin-left:30px}}
+@media(max-width:430px){.top-actions .primary-button{font-size:11px;padding:9px}.metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.metric-card{padding:13px}.metric-note{font-size:10px}.form-grid{grid-template-columns:1fr}.checks-grid{grid-template-columns:1fr}.modal-footer .right{gap:6px}.modal-footer .right button{padding:10px}.footer{flex-direction:column;align-items:flex-start;gap:8px}}
+
+.sr-label{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.attention-content .demo-pill{display:inline-block;margin-left:3px;font-size:9px;color:#bd8933;background:#fff4dd;padding:2px 5px;border-radius:4px;font-weight:700}
+
+</style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand"><span class="brand-mark">М<span class="brand-dot"></span></span><div><strong>Мир Уюта</strong><small>Рабочая панель</small></div></div>
+      <div class="nav-caption">РАБОЧЕЕ ПРОСТРАНСТВО</div>
+      <nav class="nav" aria-label="Навигация по разделам">
+        <button type="button" class="nav-button active" data-nav="overview"><span class="nav-icon">◫</span> Обзор</button>
+        <button type="button" class="nav-button" data-nav="products"><span class="nav-icon">▦</span> Все товары <span class="nav-count" id="nav-total">0</span></button>
+        <button type="button" class="nav-button" data-nav="board"><span class="nav-icon">▥</span> Этапы работы</button>
+        <button type="button" class="nav-button" data-nav="fixes"><span class="nav-icon">◇</span> Исправления <span class="nav-count hot" id="nav-fixes">0</span></button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="integration-card"><div class="integration-top"><span class="integration-icon">◈</span><strong>Маркетплейсы</strong></div><div class="marketline"><span class="market-icon ozon">O</span> Ozon <span class="market-note">Учёт карточек</span></div><div class="marketline"><span class="market-icon wb">W</span> Wildberries <span class="market-note">Учёт карточек</span></div><p>Данные пока хранятся только в этом браузере. API не подключены.</p></div>
+        <div class="sidebar-footer">v1.0 · Локальная версия</div>
+      </div>
+    </aside>
+    <div class="workspace">
+      <header class="topbar">
+        <button class="mobile-menu icon-button" type="button" id="menu-button" aria-label="Открыть меню">☰</button>
+        <div class="top-breadcrumb">Рабочее пространство <span>/</span> <strong id="breadcrumb">Обзор</strong></div>
+        <div class="top-actions"><span class="save-state"><span class="save-dot"></span> Локальное сохранение</span><button type="button" class="outline-button small" id="export-button" title="Скачать резервную копию JSON">⇩ <span>Экспорт</span></button><button type="button" class="primary-button small" data-action="new">＋ Добавить товар</button></div>
+      </header>
+      <main class="main-content">
+        <div class="page-heading"><div><div class="eyebrow" id="eyebrow">УПРАВЛЕНИЕ КАРТОЧКАМИ</div><h1 id="page-title">Обзор магазина</h1><p class="page-subtitle" id="page-subtitle">Всё необходимое для подготовки карточек в одном месте.</p></div><div class="heading-date" id="today"></div></div>
+        <div class="demo-banner" id="demo-banner" hidden><span class="demo-symbol">✦</span><div><strong>Демонстрационные карточки</strong><div>Примеры отмечены «Демо». Характеристики и артикулы не подтверждены. Замените их настоящими товарами.</div></div><button type="button" class="text-button" id="clear-demo">Убрать примеры</button></div>
+        <section class="metric-grid" id="metrics" aria-label="Показатели"></section>
+        <section class="toolbar" id="toolbar" aria-label="Поиск и фильтры"><div class="search-wrap"><span class="search-symbol">⌕</span><input type="search" id="search-input" placeholder="Поиск по названию, бренду, артикулу..." autocomplete="off" aria-label="Поиск товаров"></div><select id="brand-filter" aria-label="Фильтр по бренду"><option value="">Все бренды</option></select><select id="stage-filter" aria-label="Фильтр по этапу"><option value="">Все этапы</option></select><select id="platform-filter" aria-label="Фильтр по площадке"><option value="">Все площадки</option><option value="ozon">Ozon</option><option value="wb">Wildberries</option></select><select id="readiness-filter" aria-label="Фильтр по готовности"><option value="">Любая готовность</option><option value="ready">Готовы</option><option value="notready">Не готовы</option><option value="issues">С ошибками</option><option value="unfinished">Не опубликованы</option></select><button type="button" class="outline-button reset-btn" id="reset-filters">Сбросить</button></section>
+        <div id="view" aria-live="polite"></div>
+        <footer class="footer"><span>Мир Уюта · Панель подготовки товаров</span><div><button type="button" class="link-button" id="import-button">Импорт JSON</button><span class="foot-dot">·</span><button type="button" class="link-button" id="export-footer">Скачать копию</button></div></footer>
+      </main>
+    </div>
+  </div>
+  <input type="file" id="import-file" accept=".json,application/json" hidden>
+  <div id="modal-root"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+/* Мир Уюта — автономная версия. Никаких внешних запросов и скрытой синхронизации. */
+(() => {
+  'use strict';
+
+  const STORAGE_KEY = 'mir-uyuta-dashboard-v1';
+  const STAGES = [
+    'Артикул и официальный источник',
+    'Материал и размеры',
+    'Название и комплектность',
+    'ОКПД2 и ТН ВЭД',
+    'Категория и код WB',
+    '8 отдельных фотографий',
+    'Инфографика',
+    'Упаковка и продажа',
+    'Отправка на публикацию',
+    'Опубликовано'
+  ];
+  const ISSUE_NAMES = {
+    photo: 'Исправить фото',
+    material: 'Уточнить материал',
+    dimension: 'Уточнить размер',
+    category: 'Исправить категорию',
+    stock: 'Исправить остаток'
+  };
+  const NAV = {
+    overview: { crumb: 'Обзор', eyebrow: 'УПРАВЛЕНИЕ КАРТОЧКАМИ', title: 'Обзор магазина', subtitle: 'Всё необходимое для подготовки карточек в одном месте.' },
+    products: { crumb: 'Все товары', eyebrow: 'КАТАЛОГ ТОВАРОВ', title: 'Карточки товаров', subtitle: 'Характеристики, подтверждения и готовность к публикации.' },
+    board: { crumb: 'Этапы работы', eyebrow: 'ПРОИЗВОДСТВЕННАЯ ДОСКА', title: 'Этапы подготовки', subtitle: 'Перемещайте позиции по этапам от проверки артикула до публикации.' },
+    fixes: { crumb: 'Исправления', eyebrow: 'КОНТРОЛЬ КАЧЕСТВА', title: 'Что нужно исправить', subtitle: 'Список отмеченных проблем с фото, характеристиками и остатками.' }
+  };
+
+  const $ = (selector, root = document) => root.querySelector(selector);
+  const escapeHtml = (value) => String(value == null ? '' : value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const attr = escapeHtml;
+  const uid = () => (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : `m${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
+  const safeUrl = (text) => { try { const u = new URL(text); return ['http:', 'https:'].includes(u.protocol) ? u.href : ''; } catch (_) { return ''; } };
+  const isNonempty = (val) => String(val || '').trim().length > 0;
+  const nowISO = () => new Date().toISOString();
+  const plural = (n, forms) => { const x = n % 100, y = n % 10; return forms[x >= 11 && x <= 14 ? 2 : y === 1 ? 0 : y >= 2 && y <= 4 ? 1 : 2]; };
+  const blank = () => ({
+    id: uid(), name: '', brand: '', article: '', platforms: ['ozon'], officialUrl: '', material: '', dimensions: '', country: '', manufacturer: '', decorColor: '',
+    quantity: 1, packaging: '', saleType: 'piece', saleNote: '', okpd2: '', tnved: '', wbCategory: '', wbCode: '', marketplaceUrl: '',
+    verified: { material: false, dimensions: false, country: false, manufacturer: false }, photos: Array(8).fill(''), infographic: false,
+    packagingChecked: false, stage: 0, issues: [], nextAction: '', notes: '', demo: false, updatedAt: nowISO()
+  });
+  function demoProduct(name, brand, stage, issues, platforms, nextAction) {
+    return { ...blank(), name, brand, stage, issues, platforms, nextAction, demo: true };
+  }
+  const initialDemo = () => [
+    demoProduct('Маслёнка Grazia', 'Grazia', 1, ['material', 'dimension', 'photo'], ['ozon', 'wb'], 'Найти официальный источник и подтвердить габариты.'),
+    demoProduct('Сахарница с ложкой Grazia', 'Grazia', 0, ['category'], ['ozon', 'wb'], 'Проверить артикул, производителя и категорию.'),
+    demoProduct('Набор для чая ETNA', 'RCR', 5, ['photo'], ['ozon'], 'Подготовить 8 отдельных изображений без коллажа.'),
+    demoProduct('Ваза Plantica', 'Aurum Crystal', 2, ['dimension', 'stock'], ['wb'], 'Сверить размер и фактический остаток.'),
+    demoProduct('Бокалы Bossa Nova', 'Nachtmann', 3, ['category'], ['ozon', 'wb'], 'Проверить классификацию и предмет на WB.')
+  ];
+
+  function normalize(raw) {
+    const d = blank();
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return d;
+    for (const key of ['name', 'brand', 'article', 'officialUrl', 'material', 'dimensions', 'country', 'manufacturer', 'decorColor', 'packaging', 'saleType', 'saleNote', 'okpd2', 'tnved', 'wbCategory', 'wbCode', 'marketplaceUrl', 'nextAction', 'notes']) {
+      if (typeof raw[key] === 'string') d[key] = raw[key].slice(0, 10000);
+    }
+    if (!['piece', 'set'].includes(d.saleType)) d.saleType = 'piece';
+    d.id = typeof raw.id === 'string' && /^[\w-]{4,90}$/.test(raw.id) ? raw.id : uid();
+    d.quantity = Math.max(0, Math.min(100000000, Math.floor(Number(raw.quantity) || 0)));
+    d.stage = Math.max(0, Math.min(9, Math.floor(Number(raw.stage) || 0)));
+    d.platforms = Array.isArray(raw.platforms) ? [...new Set(raw.platforms.filter(x => x === 'ozon' || x === 'wb'))] : ['ozon'];
+    d.issues = Array.isArray(raw.issues) ? [...new Set(raw.issues.filter(x => Object.prototype.hasOwnProperty.call(ISSUE_NAMES, x)))] : [];
+    d.photos = Array.from({ length: 8 }, (_, i) => typeof raw.photos?.[i] === 'string' ? raw.photos[i].slice(0, 2000) : '');
+    d.verified = Object.fromEntries(Object.keys(d.verified).map(k => [k, Boolean(raw.verified?.[k])]));
+    d.infographic = Boolean(raw.infographic);
+    d.packagingChecked = Boolean(raw.packagingChecked);
+    d.demo = Boolean(raw.demo);
+    d.updatedAt = typeof raw.updatedAt === 'string' && !Number.isNaN(Date.parse(raw.updatedAt)) ? raw.updatedAt : nowISO();
+    return d;
+  }
+  function load() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved === null) return initialDemo();
+      const arr = JSON.parse(saved);
+      return Array.isArray(arr) ? arr.slice(0, 3000).map(normalize) : initialDemo();
+    } catch (e) {
+      console.warn('Unable to read local data', e);
+      return initialDemo();
+    }
+  }
+
+  let products = load();
+  let currentView = 'overview';
+  let selectedIssue = '';
+  let filters = { search: '', brand: '', stage: '', platform: '', readiness: '' };
+  let editingId = null;
+  let toastTimer;
+  function persist() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(products)); return true; }
+    catch (e) { toast('Место в браузере закончилось — скачайте копию JSON.'); return false; }
+  }
+  function toast(message) {
+    const el = $('#toast');
+    el.textContent = message;
+    el.classList.add('visible');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('visible'), 3500);
+  }
+
+  function photoLinks(p) {
+    const urls = p.photos.map(x => safeUrl(String(x || '').trim())).filter(Boolean);
+    return [...new Set(urls)];
+  }
+  function checks(p) {
+    const specKeys = ['material', 'dimensions', 'country', 'manufacturer'];
+    return {
+      source: Boolean(p.article.trim() && safeUrl(p.officialUrl)),
+      specs: Boolean(safeUrl(p.officialUrl) && specKeys.every(k => isNonempty(p[k]) && p.verified[k])),
+      title: Boolean(p.name.trim() && p.brand.trim() && p.quantity > 0 && (p.saleType === 'set' || p.saleType === 'piece')),
+      codes: Boolean(p.okpd2.trim() && p.tnved.trim()),
+      category: p.platforms.includes('wb') ? Boolean(p.wbCategory.trim() && p.wbCode.trim()) : true,
+      photos: photoLinks(p).length === 8,
+      infographic: Boolean(p.infographic),
+      packaging: Boolean(p.packagingChecked && p.packaging.trim() && p.saleNote.trim() && p.platforms.length)
+    };
+  }
+  function completion(p) { return Object.values(checks(p)).filter(Boolean).length; }
+  function isReady(p) { return completion(p) === 8 && p.issues.length === 0; }
+  function status(p) {
+    if (p.stage === 9) return ['Опубликовано', 'published'];
+    if (p.issues.length) return ['Есть исправления', 'bad'];
+    if (isReady(p)) return ['Готова', 'ready'];
+    return ['В подготовке', 'pending'];
+  }
+  function formatShortDate(iso) { const d = new Date(iso); return Number.isNaN(d.getTime()) ? '—' : new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'short' }).format(d); }
+  function platformTags(p) { return `<div class="platform-tags">${p.platforms.map(x => `<span class="platform-tag ${x}">${x === 'ozon' ? 'Ozon' : 'WB'}</span>`).join('') || '<span class="muted">Не выбрана</span>'}</div>`; }
+  function statusChip(p) { const s = status(p); return `<span class="chip ${s[1]}">${s[0]}</span>`; }
+  function fullName(p) { return `${escapeHtml(p.name || 'Без названия')}${p.demo ? ' <span class="demo-pill">ДЕМО</span>' : ''}`; }
+  function progressBar(p) { return `<div class="progressbar" title="${completion(p)} из 8 проверок"><span style="width:${completion(p) * 12.5}%"></span></div>`; }
+  function linkToUrl(url, label) { const safe = safeUrl(url); return safe ? `<a href="${attr(safe)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)} ↗</a>` : '—'; }
+  function matchingProducts() {
+    const q = filters.search.trim().toLowerCase();
+    return products.filter(p => {
+      if (q && ![p.name, p.brand, p.article, p.material, p.country, p.nextAction].some(x => String(x).toLowerCase().includes(q))) return false;
+      if (filters.brand && p.brand !== filters.brand) return false;
+      if (filters.stage !== '' && p.stage !== Number(filters.stage)) return false;
+      if (filters.platform && !p.platforms.includes(filters.platform)) return false;
+      if (filters.readiness === 'ready' && !isReady(p)) return false;
+      if (filters.readiness === 'notready' && isReady(p)) return false;
+      if (filters.readiness === 'issues' && !p.issues.length) return false;
+      if (filters.readiness === 'unfinished' && p.stage === 9) return false;
+      return true;
+    }).sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+  }
+  function renderMetrics() {
+    const p = matchingProducts();
+    const metrics = [
+      { title: 'Всего товаров', val: p.length, note: 'В выбранной подборке', icon: '▣', style: '' },
+      { title: 'В работе', val: p.filter(x => x.stage !== 9 && !isReady(x)).length, note: 'Ещё не готовы', icon: '◷', style: 'yellow' },
+      { title: 'Готовы к отправке', val: p.filter(x => x.stage !== 9 && isReady(x)).length, note: 'Все проверки пройдены', icon: '✓', style: 'green' },
+      { title: 'С исправлениями', val: p.filter(x => x.issues.length).length, note: 'Нуждаются во внимании', icon: '!', style: 'red' }
+    ];
+    $('#metrics').innerHTML = metrics.map(x => `<div class="metric-card"><div class="metric-top"><span>${x.title}</span><span class="metric-icon ${x.style}">${x.icon}</span></div><div class="metric-value">${x.val}</div><div class="metric-note">${x.note}</div></div>`).join('');
+  }
+  function empty(text = 'По заданным параметрам товаров нет.', caption = 'Измените фильтры или добавьте новую позицию.') {
+    return `<div class="empty-state"><div class="empty-icon">▧</div><strong>${escapeHtml(text)}</strong><p>${escapeHtml(caption)}</p><button type="button" class="primary-button" data-action="new">＋ Добавить товар</button></div>`;
+  }
+  function renderTable(items) {
+    if (!items.length) return empty();
+    return `<div class="table-wrap"><table><thead><tr><th>Товар</th><th>Площадка</th><th>Этап</th><th>Фото</th><th>Готовность</th><th>Действие</th></tr></thead><tbody>${items.map(p => `<tr><td><div class="product-name">${fullName(p)}</div><div class="product-sub">${escapeHtml(p.brand || 'Бренд не указан')} · ${escapeHtml(p.article || 'Нет артикула')}</div></td><td>${platformTags(p)}</td><td>${escapeHtml(STAGES[p.stage])}</td><td><span class="nowrap">${photoLinks(p).length} / 8</span></td><td>${statusChip(p)}${progressBar(p)}</td><td><button type="button" class="mini-action" data-edit="${attr(p.id)}">Открыть ↗</button></td></tr>`).join('')}</tbody></table></div>`;
+  }
+  function renderOverview(items) {
+    const counts = STAGES.map((_, i) => items.filter(x => x.stage === i).length);
+    const max = Math.max(1, ...counts);
+    const attention = items.filter(x => x.issues.length).slice(0, 5);
+    return `<div class="content-columns">
+      <section class="panel"><div class="panel-heading"><div><h2>Этапы подготовки</h2><p>Распределение по текущему этапу</p></div><button class="panel-link" data-nav="board" type="button">Вся доска →</button></div><div class="pipeline-list">${STAGES.map((s, i) => `<div class="pipeline-row"><span class="pipeline-label" title="${attr(s)}">${escapeHtml(s)}</span><span class="pipeline-track"><span class="pipeline-fill" style="width:${100 * counts[i] / max}%"></span></span><span class="pipeline-count">${counts[i]}</span></div>`).join('')}</div></section>
+      <section class="panel"><div class="panel-heading"><div><h2>Требуют внимания</h2><p>Отмеченные ошибки и исправления</p></div><button class="panel-link" data-nav="fixes" type="button">Все ошибки →</button></div><div class="attention-list">${attention.length ? attention.map(p => `<button class="attention-item" type="button" data-edit="${attr(p.id)}"><span class="attention-icon">!</span><span class="attention-content"><strong>${fullName(p)}</strong><span>${p.issues.map(i => ISSUE_NAMES[i]).join(' · ')}</span></span><span class="attention-arrow">›</span></button>`).join('') : `<div class="note-panel">✓ Нет товаров с отмеченными ошибками.</div>`}</div></section>
+    </div><section class="panel data-panel"><div class="panel-heading table-heading"><div><h2>Последние карточки</h2><p>Позиции из текущей подборки</p></div><button class="panel-link" type="button" data-nav="products">Все товары →</button></div>${renderTable(items.slice(0, 6))}</section>`;
+  }
+  function renderProducts(items) {
+    return `<section class="panel data-panel"><div class="panel-heading table-heading"><div><h2>Список товаров</h2><p>${items.length} ${plural(items.length, ['позиция', 'позиции', 'позиций'])} по выбранным фильтрам</p></div><button type="button" class="panel-link" data-action="new">＋ Новая карточка</button></div>${renderTable(items)}</section>`;
+  }
+  function renderBoard(items) {
+    return `<div class="kanban-wrap" tabindex="0" aria-label="Доска этапов — прокручивайте горизонтально"><div class="kanban">${STAGES.map((stage, idx) => {
+      const arr = items.filter(p => p.stage === idx);
+      return `<section class="kanban-column"><div class="kanban-head"><span>${idx + 1}. ${escapeHtml(stage)}</span><span>${arr.length}</span></div><div class="kanban-cards">${arr.length ? arr.map(p => `<article class="kanban-card">${platformTags(p)}<h3>${fullName(p)}</h3><div class="light">${escapeHtml(p.brand || 'Бренд не указан')} · ${photoLinks(p).length}/8 фото</div><div style="margin-top:10px">${statusChip(p)}</div><div class="kanban-foot"><span>${completion(p)}/8 проверок</span><div class="kanban-buttons"><button class="mini-action" type="button" data-back="${attr(p.id)}" aria-label="Вернуть на прошлый этап" ${idx === 0 ? 'disabled' : ''}>←</button><button class="mini-action" type="button" data-edit="${attr(p.id)}" aria-label="Редактировать товар">✎</button><button class="mini-action" type="button" data-advance="${attr(p.id)}" aria-label="Перейти на следующий этап" ${idx === 9 ? 'disabled' : ''}>→</button></div></div></article>`).join('') : `<div class="column-empty">Нет карточек</div>`}</div></section>`;
+    }).join('')}</div></div><div class="note-panel">ℹ Стрелки перемещают товар на следующий/предыдущий этап. В «Опубликовано» можно перейти только после всех проверок; это ручная отметка, а не отправка через API.</div>`;
+  }
+  function renderFixes(items) {
+    const filtered = selectedIssue ? items.filter(p => p.issues.includes(selectedIssue)) : items.filter(p => p.issues.length);
+    return `<div class="fixes-overview"><button type="button" class="filter-chip ${selectedIssue === '' ? 'active' : ''}" data-issue-filter="">Все ошибки (${items.filter(x => x.issues.length).length})</button>${Object.entries(ISSUE_NAMES).map(([key, name]) => `<button type="button" class="filter-chip ${selectedIssue === key ? 'active' : ''}" data-issue-filter="${key}">${escapeHtml(name)} (${items.filter(p => p.issues.includes(key)).length})</button>`).join('')}</div>${filtered.length ? `<div class="fixes-list">${filtered.map(p => `<article class="fix-card"><div class="fix-card-head"><div><h3>${fullName(p)}</h3><p>${escapeHtml(p.brand || 'Без бренда')} · ${escapeHtml(p.article || 'Артикул не указан')}</p></div>${platformTags(p)}</div><div class="issue-tags">${p.issues.map(x => `<span class="issue-tag">${escapeHtml(ISSUE_NAMES[x])}</span>`).join('')}</div><div class="fix-card-bottom"><span>${escapeHtml(p.nextAction || 'Добавьте следующий шаг в карточке')}</span><button type="button" class="mini-action" data-edit="${attr(p.id)}">Исправить →</button></div></article>`).join('')}</div>` : empty('Отмеченных ошибок нет', 'Для новых проблем поставьте соответствующую отметку в карточке товара.')}`;
+  }
+  function renderFilterOptions() {
+    const brandEl = $('#brand-filter');
+    const brands = [...new Set(products.map(x => x.brand).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'ru'));
+    brandEl.innerHTML = `<option value="">Все бренды</option>${brands.map(b => `<option value="${attr(b)}">${escapeHtml(b)}</option>`).join('')}`;
+    brandEl.value = filters.brand;
+    $('#stage-filter').innerHTML = `<option value="">Все этапы</option>${STAGES.map((s, i) => `<option value="${i}">${escapeHtml(s)}</option>`).join('')}`;
+    $('#stage-filter').value = filters.stage;
+    $('#platform-filter').value = filters.platform;
+    $('#readiness-filter').value = filters.readiness;
+  }
+  function render() {
+    const meta = NAV[currentView];
+    $('#breadcrumb').textContent = meta.crumb;
+    $('#eyebrow').textContent = meta.eyebrow;
+    $('#page-title').textContent = meta.title;
+    $('#page-subtitle').textContent = meta.subtitle;
+    $('#nav-total').textContent = String(products.length);
+    $('#nav-fixes').textContent = String(products.filter(x => x.issues.length).length);
+    $('#demo-banner').hidden = !products.some(x => x.demo);
+    document.querySelectorAll('[data-nav]').forEach(x => { if (x.classList.contains('nav-button')) x.classList.toggle('active', x.dataset.nav === currentView); });
+    const items = matchingProducts();
+    renderMetrics();
+    renderFilterOptions();
+    $('#view').innerHTML = currentView === 'overview' ? renderOverview(items) : currentView === 'products' ? renderProducts(items) : currentView === 'board' ? renderBoard(items) : renderFixes(items);
+  }
+  function showView(view) {
+    if (!NAV[view]) return;
+    currentView = view;
+    $('#sidebar').classList.remove('open');
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function field(label, key, value, placeholder = '', opts = {}) {
+    const full = opts.full ? ' full' : '';
+    const required = opts.required ? ' required' : '';
+    const type = opts.type || 'text';
+    return `<div class="field${full}"><label for="f-${key}">${escapeHtml(label)}${opts.required ? ' *' : ''}</label><input id="f-${key}" name="${key}" type="${type}" value="${attr(value)}" placeholder="${attr(placeholder)}"${required}${opts.min != null ? ` min="${opts.min}"` : ''}>${opts.hint ? `<span class="input-hint">${escapeHtml(opts.hint)}</span>` : ''}</div>`;
+  }
+  function area(label, key, value, placeholder = '') {
+    return `<div class="field full"><label for="f-${key}">${escapeHtml(label)}</label><textarea id="f-${key}" name="${key}" placeholder="${attr(placeholder)}">${escapeHtml(value)}</textarea></div>`;
+  }
+  function checkbox(name, title, checked, value = 'on') {
+    return `<label><input type="checkbox" name="${name}" value="${attr(value)}" ${checked ? 'checked' : ''}>${escapeHtml(title)}</label>`;
+  }
+  function formHtml(p, isNew) {
+    return `<div class="modal-backdrop" id="editor-backdrop"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="editor-title"><div class="modal-header"><div><h2 id="editor-title">${isNew ? 'Новая карточка' : 'Редактирование товара'}</h2><p>Только подтверждённые данные из официальных источников</p></div><button class="close-button" type="button" data-action="close" aria-label="Закрыть">×</button></div><form id="product-form" class="product-form">
+      <fieldset class="form-section"><legend>01 / Основная информация</legend><div class="form-grid">
+        ${field('Название товара', 'name', p.name, 'Например, Сахарница с ложкой Grazia', { required: true, full: true })}
+        ${field('Бренд', 'brand', p.brand, 'Grazia', { required: true })}
+        ${field('Артикул', 'article', p.article, 'Артикул производителя')}
+        <div class="field full"><label>Площадки</label><div class="choice-row">${checkbox('platforms', 'Ozon', p.platforms.includes('ozon'), 'ozon')}${checkbox('platforms', 'Wildberries', p.platforms.includes('wb'), 'wb')}</div></div>
+        ${field('Официальная ссылка на товар', 'officialUrl', p.officialUrl, 'https://...', { full: true, type: 'url', hint: 'Ссылка на сайт производителя или официальный каталог бренда.' })}
+      </div></fieldset>
+      <fieldset class="form-section"><legend>02 / Характеристики и подтверждения</legend><p class="form-section-note">Не придумывайте материал, страну, размеры и производителя. Укажите источник выше и отмечайте подтверждение только после фактической проверки.</p><div class="form-grid">
+        ${field('Материал', 'material', p.material, 'Хрустальное стекло / фарфор / ...')}
+        ${field('Размеры / объём', 'dimensions', p.dimensions, 'Высота, диаметр, объём')}
+        ${field('Страна производства', 'country', p.country, 'Не подтверждена')}
+        ${field('Производитель', 'manufacturer', p.manufacturer, 'Компания-производитель')}
+        ${field('Цвет / декор', 'decorColor', p.decorColor, 'Прозрачный / золотой / ...')}
+        ${field('Количество в продаже', 'quantity', p.quantity, '1', { type: 'number', min: 0 })}
+        <div class="field full"><label>Подтверждено по официальному источнику</label><div class="checks-grid">${Object.entries({ material: 'Материал', dimensions: 'Размеры / объём', country: 'Страна', manufacturer: 'Производитель' }).map(([k, v]) => checkbox(`verified_${k}`, v, p.verified[k])).join('')}</div></div>
+      </div></fieldset>
+      <fieldset class="form-section"><legend>03 / Классификация и комплектность</legend><div class="form-grid">
+        ${field('ОКПД2', 'okpd2', p.okpd2, 'XX.XX.XX.XXX')}
+        ${field('ТН ВЭД ЕАЭС', 'tnved', p.tnved, '10 цифр')}
+        ${field('Категория / предмет WB', 'wbCategory', p.wbCategory, 'Точная категория WB')}
+        ${field('Код категории / предмета WB', 'wbCode', p.wbCode, 'Код WB')}
+        <div class="field full"><label for="f-saleType">Тип продажи</label><select id="f-saleType" name="saleType"><option value="piece" ${p.saleType === 'piece' ? 'selected' : ''}>Поштучно</option><option value="set" ${p.saleType === 'set' ? 'selected' : ''}>Набор / комплект</option></select></div>
+        ${field('Упаковка', 'packaging', p.packaging, 'Заводская коробка / дополнительный картон', { full: true })}
+        ${area('Что покупатель получает', 'saleNote', p.saleNote, '1 предмет без фирменной коробки / набор из 6 шт. / ...')}
+        <div class="field full"><div class="checks-grid">${checkbox('packagingChecked', 'Упаковка и комплектность проверены', p.packagingChecked)}</div></div>
+      </div></fieldset>
+      <fieldset class="form-section"><legend>04 / Фотографии и инфографика</legend><p class="form-section-note">Каждый слот — отдельное полноценное фото, а не фрагмент коллажа. В этой версии укажите ссылки на изображения (хранятся ссылки, не файлы).</p><div class="photo-slots">${Array.from({ length: 8 }, (_, i) => `<div class="photo-slot"><span>${i + 1}</span><div class="field" style="flex:1"><label for="f-photo-${i}" class="sr-label">Фото ${i + 1}</label><input type="url" name="photo_${i}" id="f-photo-${i}" placeholder="Ссылка на фото ${i + 1}" value="${attr(p.photos[i] || '')}"></div></div>`).join('')}</div><div class="section-counter" id="live-photo-count">${photoLinks(p).length} из 8 уникальных ссылок на фотографии</div><div class="checks-grid">${checkbox('infographic', 'Инфографика добавлена и проверена', p.infographic)}</div></fieldset>
+      <fieldset class="form-section"><legend>05 / Этап и контроль ошибок</legend><div class="form-grid"><div class="field full"><label for="f-stage">Текущий этап</label><select name="stage" id="f-stage">${STAGES.map((s, i) => `<option value="${i}" ${p.stage === i ? 'selected' : ''}>${i + 1}. ${escapeHtml(s)}</option>`).join('')}</select></div><div class="field full"><label>Нужно исправить</label><div class="checks-grid">${Object.entries(ISSUE_NAMES).map(([k, v]) => checkbox('issues', v, p.issues.includes(k), k)).join('')}</div></div>
+      ${field('Ссылка на карточку Ozon / WB', 'marketplaceUrl', p.marketplaceUrl, 'https://...', { full: true, type: 'url' })}
+      ${area('Следующий шаг', 'nextAction', p.nextAction, 'Что нужно сделать дальше?')}
+      ${area('Ошибки / замечания / примечания', 'notes', p.notes, 'Что не подтверждено, что сверить, что исправить?')}
+      </div></fieldset><div class="callout">Важно: перевод в «Опубликовано» доступен только после заполнения всех обязательных проверок и снятия отметок об ошибках. Реальной публикации на Ozon или WB это не выполняет.</div>
+    </form><div class="modal-footer"><div>${!isNew ? '<button type="button" class="danger-button" data-action="delete">Удалить</button>' : ''}</div><div class="right"><button type="button" class="outline-button" data-action="close">Отмена</button><button type="submit" form="product-form" class="primary-button">Сохранить карточку</button></div></div></section></div>`;
+  }
+  function openEditor(id = null) {
+    editingId = id;
+    const p = id === null ? blank() : products.find(x => x.id === id);
+    if (!p) return toast('Карточка не найдена.');
+    $('#modal-root').innerHTML = formHtml(p, id === null);
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => $('#f-name')?.focus(), 0);
+  }
+  function closeEditor() {
+    $('#modal-root').innerHTML = '';
+    document.body.style.overflow = '';
+    editingId = null;
+  }
+  function readForm(form) {
+    const fd = new FormData(form);
+    const d = editingId ? products.find(x => x.id === editingId) : blank();
+    if (!d) return null;
+    const p = normalize(d);
+    for (const key of ['name', 'brand', 'article', 'officialUrl', 'material', 'dimensions', 'country', 'manufacturer', 'decorColor', 'packaging', 'saleType', 'saleNote', 'okpd2', 'tnved', 'wbCategory', 'wbCode', 'marketplaceUrl', 'nextAction', 'notes']) p[key] = String(fd.get(key) || '').trim();
+    p.quantity = Math.max(0, Math.floor(Number(fd.get('quantity')) || 0));
+    p.stage = Math.max(0, Math.min(9, Number(fd.get('stage')) || 0));
+    p.platforms = [...new Set(fd.getAll('platforms').filter(x => x === 'ozon' || x === 'wb'))];
+    p.issues = [...new Set(fd.getAll('issues').filter(x => ISSUE_NAMES[x]))];
+    p.verified = Object.fromEntries(['material', 'dimensions', 'country', 'manufacturer'].map(k => [k, fd.has(`verified_${k}`)]));
+    p.photos = Array.from({ length: 8 }, (_, i) => String(fd.get(`photo_${i}`) || '').trim());
+    p.infographic = fd.has('infographic');
+    p.packagingChecked = fd.has('packagingChecked');
+    p.demo = false; // Any user-edited demo becomes a real, user-managed draft.
+    p.updatedAt = nowISO();
+    return p;
+  }
+  function saveForm(form) {
+    const p = readForm(form);
+    if (!p) return;
+    if (!p.name || !p.brand) return toast('Укажите название и бренд.');
+    if (!p.platforms.length) return toast('Выберите хотя бы одну площадку.');
+    if (p.officialUrl && !safeUrl(p.officialUrl)) return toast('Официальная ссылка должна начинаться с https:// или http://.');
+    if (p.marketplaceUrl && !safeUrl(p.marketplaceUrl)) return toast('Проверьте ссылку на карточку маркетплейса.');
+    if (Object.values(p.verified).some(Boolean) && !safeUrl(p.officialUrl)) return toast('Сначала укажите действительную ссылку на официальный источник.');
+    if (p.photos.some(x => x && !safeUrl(x))) return toast('Ссылки на фотографии должны начинаться с https:// или http://.');
+    if (p.photos.filter(Boolean).length !== photoLinks(p).length) return toast('Одна и та же фотография указана несколько раз.');
+    if (p.stage === 9 && !isReady(p)) return toast('Нельзя отметить публикацию: не все проверки выполнены или остались ошибки.');
+    if (editingId) products = products.map(x => x.id === editingId ? p : x);
+    else products.unshift(p);
+    persist();
+    closeEditor();
+    render();
+    toast('Карточка сохранена в этом браузере.');
+  }
+  function moveStage(id, delta) {
+    const p = products.find(x => x.id === id);
+    if (!p) return;
+    const next = Math.max(0, Math.min(9, p.stage + delta));
+    if (next === 9 && !isReady(p)) return toast('Перед публикацией заполните обязательные данные и снимите ошибки.');
+    p.stage = next;
+    p.updatedAt = nowISO();
+    persist(); render();
+  }
+  function clearDemo() {
+    const count = products.filter(x => x.demo).length;
+    if (!count || !confirm(`Удалить ${count} демонстрационных карточек? Ваши собственные товары останутся.`)) return;
+    products = products.filter(x => !x.demo);
+    persist(); render(); toast('Демонстрационные карточки удалены.');
+  }
+  function exportJson() {
+    const data = { type: 'mir-uyuta-dashboard', version: 1, exportedAt: nowISO(), products };
+    const json = JSON.stringify(data, null, 2);
+    const blob = new Blob([json], { type: 'application/json;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `mir-uyuta-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    toast('Резервная копия скачана.');
+  }
+  async function importJson(file) {
+    if (!file) return;
+    if (file.size > 4_000_000) return toast('Файл слишком большой (максимум 4 МБ).');
+    try {
+      const data = JSON.parse(await file.text());
+      if (data.type !== 'mir-uyuta-dashboard' || data.version !== 1 || !Array.isArray(data.products) || data.products.length > 3000) {
+        return toast('Неподходящий формат: нужен экспорт этой панели версии 1.');
+      }
+      if (!confirm(`Импортировать ${data.products.length} карточек? Это полностью заменит текущий список. Рекомендуется сначала скачать резервную копию.`)) return;
+      const seen = new Set();
+      products = data.products.map(raw => {
+        const p = normalize(raw);
+        if (seen.has(p.id)) p.id = uid();
+        seen.add(p.id);
+        return p;
+      });
+      filters = { search: '', brand: '', stage: '', platform: '', readiness: '' };
+      $('#search-input').value = '';
+      persist(); render();
+      toast(`Импортировано ${products.length} карточек.`);
+    } catch (e) { console.warn('JSON import error', e); toast('Не удалось прочитать файл JSON.'); }
+    finally { $('#import-file').value = ''; }
+  }
+
+  document.addEventListener('click', event => {
+    if (event.target.id === 'editor-backdrop') return closeEditor();
+    const nav = event.target.closest('[data-nav]');
+    if (nav) return showView(nav.dataset.nav);
+    const edit = event.target.closest('[data-edit]');
+    if (edit) return openEditor(edit.dataset.edit);
+    const advance = event.target.closest('[data-advance]');
+    if (advance) return moveStage(advance.dataset.advance, 1);
+    const back = event.target.closest('[data-back]');
+    if (back) return moveStage(back.dataset.back, -1);
+    const issueFilter = event.target.closest('[data-issue-filter]');
+    if (issueFilter) { selectedIssue = issueFilter.dataset.issueFilter; render(); return; }
+    const action = event.target.closest('[data-action]')?.dataset.action;
+    if (action === 'new') return openEditor();
+    if (action === 'close') return closeEditor();
+    if (action === 'delete') {
+      const p = products.find(x => x.id === editingId);
+      if (!p || !confirm(`Удалить «${p.name || 'Без названия'}»? Действие нельзя отменить, кроме восстановления резервной копии.`)) return;
+      products = products.filter(x => x.id !== p.id);
+      persist(); closeEditor(); render(); toast('Карточка удалена.');
+    }
+  });
+  document.addEventListener('submit', event => {
+    if (event.target.id !== 'product-form') return;
+    event.preventDefault();
+    saveForm(event.target);
+  });
+  document.addEventListener('input', event => {
+    if (event.target.matches('[name^="photo_"]')) {
+      const inputs = Array.from(document.querySelectorAll('#product-form [name^="photo_"]'));
+      const count = new Set(inputs.map(x => safeUrl(x.value.trim())).filter(Boolean)).size;
+      const counter = $('#live-photo-count');
+      if (counter) counter.textContent = `${count} из 8 уникальных ссылок на фотографии`;
+    }
+  });
+  $('#search-input').addEventListener('input', e => { filters.search = e.target.value; render(); });
+  for (const [id, key] of [['brand-filter', 'brand'], ['stage-filter', 'stage'], ['platform-filter', 'platform'], ['readiness-filter', 'readiness']]) {
+    $(`#${id}`).addEventListener('change', e => { filters[key] = e.target.value; render(); });
+  }
+  $('#reset-filters').addEventListener('click', () => {
+    filters = { search: '', brand: '', stage: '', platform: '', readiness: '' };
+    $('#search-input').value = '';
+    selectedIssue = '';
+    render();
+  });
+  $('#clear-demo').addEventListener('click', clearDemo);
+  $('#export-button').addEventListener('click', exportJson);
+  $('#export-footer').addEventListener('click', exportJson);
+  $('#import-button').addEventListener('click', () => $('#import-file').click());
+  $('#import-file').addEventListener('change', e => importJson(e.target.files[0]));
+  $('#menu-button').addEventListener('click', () => $('#sidebar').classList.toggle('open'));
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') { if ($('#editor-backdrop')) closeEditor(); else $('#sidebar').classList.remove('open'); }
+  });
+  $('#today').textContent = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date());
+  render();
+})();
+
+</script>
+</body>
+</html>
